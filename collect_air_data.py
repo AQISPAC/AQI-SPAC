@@ -21,7 +21,7 @@ response = requests.get(url, params=params)
 if response.status_code == 200:
     data = response.json()
 
-    # ensure data directory exists
+    # THIS LINE MUST COME BEFORE open()
     os.makedirs("data", exist_ok=True)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
@@ -31,6 +31,5 @@ if response.status_code == 200:
         json.dump(data, f, indent=4)
 
     print("Saved:", filename)
-
 else:
     raise RuntimeError(response.text)
