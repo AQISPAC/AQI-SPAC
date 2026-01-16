@@ -3,9 +3,11 @@ import json
 import os
 from datetime import datetime
 
-API_KEY = os.getenv("878cab0a56ad8e19e908bd65147e8336")
+# READ API KEY (THIS WORKS – WE KNOW IT EXISTS)
+API_KEY = os.environ.get("OPENWEATHER_API_KEY")
 
-if not API_KEY:
+# SAFETY CHECK
+if API_KEY is None or API_KEY.strip() == "":
     raise RuntimeError("OPENWEATHER_API_KEY not found")
 
 LAT = 6.752670
@@ -21,18 +23,18 @@ params = {
 
 response = requests.get(url, params=params)
 
-if response.status_code == 200:
-    data = response.json()
-
-    # THIS LINE MUST COME BEFORE open()
-    os.makedirs("data", exist_ok=True)
-
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    filename = f"data/air_pollution_{timestamp}.json"
-
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
-
-    print("Saved:", filename)
-else:
+if response.status_code != 200:
     raise RuntimeError(response.text)
+
+data = response.json()
+
+# ENSURE DATA DIRECTORY EXISTS
+os.makedirs("data", exist_ok=True)
+
+timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+filename = f"data/air_pollution_{timestamp}.json"
+
+with open(filename, "w") as f:
+    json.dump(data, f, indent=4)
+
+print("Saved:", filename)
