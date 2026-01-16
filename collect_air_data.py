@@ -1,8 +1,9 @@
 import requests
 import json
+import os
 from datetime import datetime
 
-API_KEY = "878cab0a56ad8e19e908bd65147e8336"
+API_KEY = os.getenv("878cab0a56ad8e19e908bd65147e8336")
 
 LAT = 6.752670
 LON = 125.262184
@@ -20,6 +21,9 @@ response = requests.get(url, params=params)
 if response.status_code == 200:
     data = response.json()
 
+    # ensure data directory exists
+    os.makedirs("data", exist_ok=True)
+
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     filename = f"data/air_pollution_{timestamp}.json"
 
@@ -27,5 +31,6 @@ if response.status_code == 200:
         json.dump(data, f, indent=4)
 
     print("Saved:", filename)
+
 else:
     raise RuntimeError(response.text)
