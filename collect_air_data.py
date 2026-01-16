@@ -3,7 +3,10 @@ import json
 import os
 from datetime import datetime
 
-API_KEY = "878cab0a56ad8e19e908bd65147e8336"
+API_KEY = os.getenv("878cab0a56ad8e19e908bd65147e8336")
+
+if not API_KEY:
+    raise RuntimeError("OPENWEATHER_API_KEY not found")
 
 LAT = 6.752670
 LON = 125.262184
