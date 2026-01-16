@@ -2,7 +2,7 @@ name: Hourly Air Pollution Collection
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 * * * *"   # every hour
   workflow_dispatch:
 
 jobs:
